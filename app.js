@@ -17,7 +17,7 @@ const io = new Server(server, {
 //     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
 // };
 
-// app.use(cors(corsOptions));
+app.use(cors(corsOptions));
 
 app.get('/', (req, res) => {
     res.send('Serveur Socket.IO fonctionne');
@@ -35,9 +35,9 @@ io.on('connection', (socket) => {
     });
 
     // ecoute mess
-    socket.on('message', ({ conversationId, msg, sender }) => {
+    socket.on('message', ({ conversationId, msg }) => {
         console.log(`Message reçu dans la salle ${conversationId}: ${msg}`);
-        io.to(conversationId).emit('message', sender); 
+        io.to(conversationId).emit('message', msg); 
     });
 
     // gere deconnexion

@@ -17,7 +17,7 @@ const io = new Server(server, {
 //     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
 // };
 
-app.use(cors(corsOptions));
+// app.use(cors(corsOptions));
 
 app.get('/', (req, res) => {
     res.send('Serveur Socket.IO fonctionne');

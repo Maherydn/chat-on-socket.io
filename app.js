@@ -19,6 +19,9 @@ const io = new Server(server, {
 
 // app.use(cors(corsOptions));
 
+const connectedUsers = {};
+
+
 app.get('/', (req, res) => {
     res.send('Serveur Socket.IO fonctionne');
 });
@@ -26,6 +29,21 @@ app.get('/', (req, res) => {
 
 io.on('connection', (socket) => {
     console.log('Un utilisateur s\'est connecté');
+  // Écouter l'événement de connexion de l'utilisateur
+    socket.on('registerUser', (userId, username) => {
+        connectedUsers[socket.id] = userId, username; // Associer l'ID de socket à l'ID de l'utilisateur
+        // io.emit('userConnected', { userId, socketId: socket.id });
+        io.emit('updateUserList', Object.values(connectedUsers)); 
+        console.log(connectedUsers);
+        
+    });
+
+    // Écouter les déconnexions
+    socket.on('disconnect', () => {
+        const userId = connectedUsers[socket.id];
+        delete connectedUsers[socket.id]; // Retirer l'utilisateur de la liste
+        io.emit('userDisconnected', { userId, socketId: socket.id });
+    });
 
     // rejoindre room
     socket.on('joinRoom', (conversationId) => {
